@@ -5,9 +5,9 @@ Oftentimes while doing performance tests in javascript, I need to create test da
  * sufficiently random
  * reproducable
 
-Javascript's Math.random can do the first 2 constraints, but the third one is left in the open 
+Javascript's `Math.random` can do the first 2 constraints, but the third one is left in the open 
 and that's the problem; if you can't reliably reproduce the same set of psuedo random numbers every
-time, then that is yet another factor that made lead to a higher variance during test runs than
+time, then that is yet another factor that may lead to a higher variance during test runs than
 necessary.
 
 Seeing as the performance of this library could vary too and become a factor, there is a routine
