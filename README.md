@@ -80,14 +80,14 @@ things relatively fast and easy to read.
 # Tests
 The file test.html tests two things:
 
-## Running out a number of seeds a few hundred thousand times
+### Running out a number of seeds a few hundred thousand times
 The purpose of this test is to verify that the nth random number at seed x is identical on all
 platforms.  Currently this is verified by visual inspection.  Each seed 0 through (currently) 28
 is run out 300,000 times and then printed to the screen.  If there is floating point arithematic 
 differences between platforms or browsers that would lead to eventually different generation, this
 would be viewable here.
 
-## Tile generation of random distributions
+### Tile generation of random distributions
 The purpose of this test is to verify by visual inspection the rough general quality of the output.
 Each tile is 
 
