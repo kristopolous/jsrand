@@ -21,7 +21,7 @@
   function runout() {
     for(var i = 0; i < 28; i++) {
       _rand.seed(i);
-      for(var j = 0; j < 300 * 1000; j++) {
+      for(var j = 0; j < 300 * 10; j++) {
         _rand();
       }
       document.getElementById('runout').innerHTML += '<pre>' + _rand() + '</pre>';
@@ -45,26 +45,23 @@
     var 
       width = 6400,
       size = Math.floor(Math.sqrt(width)),
-      count = 250000,
-      dist = {},
-      total = 0,
+      count = 2500,
       raster = [],
+      canvas = document.getElementById('tiles').appendChild(document.createElement('canvas')),
+      ctx = canvas.getContext('2d'), 
+      scaled, 
+      j = 0,
       maxvalue = 0,
       iter;
 
     for(var i = 0; i < count; i++) {
       iter = _rand(0, width);
-      increment(dist, iter);
       increment(raster, Math.floor(iter));
-
-      total += iter;
     }
-    var canvas = document.getElementById('tiles').appendChild(document.createElement('canvas'));
 
     canvas.setAttribute('width', size);
     canvas.setAttribute('height', size);
 
-    var ctx = canvas.getContext('2d'), scaled, j = 0;
     for(i = 0 ; i < size; i++) {
       for( j = 0; j < size; j++) {
         scaled = Math.floor(256 * raster[i * size + j] / maxvalue);

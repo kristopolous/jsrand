@@ -32,7 +32,7 @@ Also, you can generate numbers from [min, max] like so:
 
 To generate a set of numbers of length count, do the following:
 
-    _rand.set(count)
+    _rand.[PRNG | MT].set(count) || _rand.set(GENERATOR, count) || _rand.set(count)
 
 The set command also takes the same arguments as rand, after the count.  For instance,
 to generate `count` random numbers from `min` to `max`, do the following:
@@ -40,6 +40,9 @@ to generate `count` random numbers from `min` to `max`, do the following:
     _rand.set(count, min, max)
 
 # Algorithm
+MT and PRNG are offered.  The MT algorithm is MT19937 over a 32 bit space while the PRNG is
+explained below:
+
 The current "PRNG" algorithm is the common iterative of the form (variables explained below)
 
     new iteration = ( (constant 1) * old iteration + (constant 2) ) modulus (constant 3)
