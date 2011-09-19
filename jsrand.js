@@ -12,7 +12,7 @@ _rand.set = function() {
   
   var size = args.shift(),
       min = args.shift(),
-      max = args.shift,
+      max = args.shift(),
       set = [];
 
   do {
