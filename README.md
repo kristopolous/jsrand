@@ -1,3 +1,5 @@
+** Demo and test: [http://qaa.ath.cx/jsrand/test.html](Right over here) **
+
 # Overview
 Oftentimes while doing performance tests in javascript, I need to create test data with the following properties:
 
@@ -30,14 +32,36 @@ Also, you can generate numbers from [min, max] like so:
 
     _rand(min, max)
 
-To generate a set of numbers of length count, do the following:
+### Drop in replacement / Apply on existing code-bases
 
-    _rand.[PRNG | MT].set(count) || _rand.set(GENERATOR, count) || _rand.set(count)
+You can painlessly override `Math.random` by just tacking on:
+
+    Math.random = _rand;
+
+Now your existing code base will use predictable sequences.
+
+
+## Sets
 
 The set command also takes the same arguments as rand, after the count.  For instance,
 to generate `count` random numbers from `min` to `max`, do the following:
 
     _rand.set(count, min, max)
+
+You can use the following invocation styles:
+
+    _rand.[PRNG | MT].set(count) || _rand.set(GENERATOR, count) || _rand.set(count)
+
+## Shuffle
+
+The shuffle command is an implementation of Fisher-Yates.  Example Usage:
+
+    _rand.shuffle([1,2,3,4,5]) 
+    [5, 2, 1, 4, 3]
+
+You can use the following invocation styles:
+
+    _rand.[PRNG | MT].shuffle(count) || _rand.shuffle(GENERATOR, count) || _rand.shuffle(count)
 
 # Algorithm
 MT and PRNG are offered.  The MT algorithm is MT19937 over a 32 bit space while the PRNG is

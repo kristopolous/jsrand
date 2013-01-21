@@ -1,3 +1,9 @@
+/*
+ * JsRand - predictable random number generation for javascript
+ *
+ * For the latest copy try here: https://github.com/kristopolous/jsrand
+ */
+
 function _rand() {
   return _rand.MT.apply(this, Array.prototype.slice.call(arguments));
 };
@@ -20,6 +26,37 @@ _rand.set = function() {
   } while (-- size);
 
   return set;
+}
+
+// This is Fisher-Yates 
+// see here: http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+_rand.shuffle = function() {
+  var 
+    generator = "PRNG",
+    args = Array.prototype.slice.call(arguments),
+    array,
+    remaining,
+    slosh, 
+    ptr;
+
+  if (args[0] instanceof String) {
+    generator = args.shift();
+  }
+
+  array = args[0];
+  remaining = array.length;
+
+  while (remaining) {
+
+    ptr = Math.floor(_rand[generator](0, remaining--));
+
+    // And swap it with the current element.
+    slosh = array[remaining];
+    array[remaining] = array[ptr];
+    array[ptr] = slosh;
+  }
+
+  return array;
 }
 
 _rand.PRNG = (function() {
@@ -61,6 +98,9 @@ _rand.PRNG = (function() {
 
   ret.set = function() {
     return _rand.set.apply(this, ["PRNG"].concat(arguments));
+  }
+  ret.shuffle = function() {
+    return _rand.shuffle.apply(this, ["PRNG"].concat(arguments));
   }
 
   ret.seed = function(which) {
@@ -124,6 +164,9 @@ _rand.MT = (function() {
 
   ret.set = function() {
     return _rand.set.apply(this, ["MT"].concat(arguments));
+  }
+  ret.shuffle = function() {
+    return _rand.shuffle.apply(this, ["MT"].concat(arguments));
   }
 
   initialize_generator( +new Date() );
