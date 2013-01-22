@@ -59,6 +59,22 @@ _rand.shuffle = function() {
   return array;
 }
 
+_rand.BaseGen = function (len, base) {
+  return Math.floor( _rand( 0, base )).toString(base) + (
+    (len > 1) ?
+      arguments.callee(len - 1, base) : ''
+    );
+}
+
+_rand.UUID = function(){
+  return [
+    _rand.BaseGen(8, 16),
+    _rand.BaseGen(4, 16),
+    _rand.BaseGen(4, 16),
+    _rand.BaseGen(4, 16),
+    _rand.BaseGen(12, 16)
+  ].join('-');
+}
 _rand.PRNG = (function() {
   var primes = [ [
       15485933, 15486347, 15486953, 15487177,

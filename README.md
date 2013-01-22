@@ -63,6 +63,26 @@ You can use the following invocation styles:
 
     _rand.[PRNG | MT].shuffle(count) || _rand.shuffle(GENERATOR, count) || _rand.shuffle(count)
 
+## BaseGen
+
+BaseGen is intended to create a string of X digits expressed in base Y:
+
+    _rand.BaseGen(100, 32)
+    "phftdnnu8s0cc9s7d8mtpqkjjiefkbte046lm5tksvrg4ac8t4251l92ms1vpm7h7chtdldscao7h5mqt9n51l06hj827en0t8im"
+
+    _rand.BaseGen(200, 10)
+    "30097034452802550871486525680991130549975686260731585" \
+    "03673310825717932257445225686163918381176296379272401" \
+    "10854695166069800229856722064738545820166775777106077" \
+    "16866697694687595079101472107079087607466"
+
+## UUID
+
+UUID is an application of BaseGen that generates a UUID-formatted string (of course, we don't have UUID style entropy ... that's not the point here).
+
+    _rand.UUID()
+    "c87e6bbf-4e06-64e3-64be-cda99977a5e7"
+
 # Algorithm
 MT and PRNG are offered.  The MT algorithm is MT19937 over a 32 bit space while the PRNG is
 explained below:
