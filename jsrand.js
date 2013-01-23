@@ -51,7 +51,7 @@ var Random = (function(){
     ].join('-');
   }
 
-  Base.prototype.int = function(){
+  Base.prototype.integer = function(){
     return Math.round(this.generate.apply(this, arguments));
   }
 

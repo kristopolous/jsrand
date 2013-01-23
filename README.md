@@ -20,8 +20,8 @@ This library is modularized. It has a set a generic functions and two different 
  * seed (x) : seeds the generator to `x`.
  * generate () : generates a floating point between 0 and 1.
  * generate (min, max) : generates a floating point between `min` and `max`.
- * int () : generates an integer between 0 and 1.
- * int (min, max) : generates an integer between `min` and `max`.
+ * integer () : generates an integer between 0 and 1.
+ * integer (min, max) : generates an integer between `min` and `max`.
  * set (count, min, max) : generates an array of floating point numbers between `min` and `max`.
  * shuffle (array) : re-orders `array` using Fisher-Yates.
  * base (len, radix) : generates `len` characters in base `radix`.
