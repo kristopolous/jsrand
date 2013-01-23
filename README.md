@@ -38,6 +38,10 @@ To start a new MT generator:
 
     var generator = new Random.MT();
 
+To start a new PRNG generator:
+
+    var generator = new Random.PRNG();
+
 Then you can use it as follows:
 
     generator.UUID();
@@ -57,7 +61,7 @@ The functions above are written generically and can be used with a generator you
 
 To create a generator you run this:
 
-    var NewType = Generator(gen);
+    var NewType = Random.Generator(gen);
     var instance = new NewType();
 
 Where `gen` is a function that returns an object with the following two keys defined:
