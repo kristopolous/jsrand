@@ -7,152 +7,63 @@ Oftentimes while doing performance tests in javascript, I need to create test da
  * sufficiently random
  * reproducable
 
-Javascript's `Math.random` can do the first 2 constraints, but the third one is left in the open 
-and that's the problem; if you can't reliably reproduce the same set of psuedo random numbers every
-time, then that is yet another factor that may lead to a higher variance during test runs than
-necessary.
+Javascript's `Math.random` can do the first 2 constraints, but the third one is left in the open and that's the problem; if you can't reliably reproduce the same set of psuedo random numbers every time, then that is yet another factor that may lead to a higher variance during test runs than necessary.
 
-Seeing as the performance of this library could vary too and become a factor, there is a routine
-designed to generate a set of random numbers of a given length.
+Seeing as the performance of this library could vary too and become a factor, there is a routine designed to generate a set of random numbers of a given length.
 
-# Usage
-By default, the function seeds on the system time, like `Math.random()`.  This can be changed through
+# About
 
-    _rand.seed( number )
+This library is modularized. It has a set a generic functions and two different generators.
 
-To generate a random number, call `_rand` like so:
+## Functions
 
-    _rand()
+ * seed (x) : seeds the generator to `x`.
+ * generate () : generates a floating point between 0 and 1.
+ * generate (min, max) : generates a floating point between `min` and `max`.
+ * int () : generates an integer between 0 and 1.
+ * int (min, max) : generates an integer between `min` and `max`.
+ * set (count, min, max) : generates an array of floating point numbers between `min` and `max`.
+ * shuffle (array) : re-orders `array` using Fisher-Yates.
+ * base (len, radix) : generates `len` characters in base `radix`.
+ * UUID () : generates a UUID formatted string.
 
-As a convenience, you can generate numbers from [0, max] like so:
+## Usage
 
-    _rand(max)
+To use, create a new object of the type of generator you want to use.  currently supported generators are:
 
-Also, you can generate numbers from [min, max] like so:
+  * MT: MT19937 over 32-bit space
+  * PRNG: X[n + 1] = (a * X[n] + b) mod m
 
-    _rand(min, max)
+To start a new MT generator:
+
+    var generator = new Random.MT();
+
+Then you can use it as follows:
+
+    generator.UUID();
+    generator.shuffle([1,2,3,4]);
+
+And so on.  Every generator is seeded at 0.
 
 ### Drop in replacement / Apply on existing code-bases
 
-You can painlessly override `Math.random` by just tacking on:
+You can override `Math.random` by using the `_unitgenerator` of an instance.
 
-    Math.random = _rand;
+    Math.random = generator._unitgenerator;
 
-Now your existing code base will use predictable sequences.
+### Extending
 
+The functions above are written generically and can be used with a generator you author yourself. 
 
-## Sets
+To create a generator you run this:
 
-The set command also takes the same arguments as rand, after the count.  For instance,
-to generate `count` random numbers from `min` to `max`, do the following:
+    var NewType = Generator(gen);
+    var instance = new NewType();
 
-    _rand.set(count, min, max)
+Where `gen` is a function that returns an object with the following two keys defined:
 
-You can use the following invocation styles:
+ * `seed: function(number)` - seeds the generator
+ * `_unitgenerate: function()` - returns an iteration of the generator scaled between 0 and 1.
 
-    _rand.[PRNG | MT].set(count) || _rand.set(GENERATOR, count) || _rand.set(count)
-
-## Shuffle
-
-The shuffle command is an implementation of Fisher-Yates.  Example Usage:
-
-    _rand.shuffle([1,2,3,4,5]) 
-    [5, 2, 1, 4, 3]
-
-You can use the following invocation styles:
-
-    _rand.[PRNG | MT].shuffle(count) || _rand.shuffle(GENERATOR, count) || _rand.shuffle(count)
-
-## BaseGen
-
-BaseGen is intended to create a string of X digits expressed in base Y:
-
-    _rand.BaseGen(100, 32)
-    "phftdnnu8s0cc9s7d8mtpqkjjiefkbte046lm5tksvrg4ac8t4251l92ms1vpm7h7chtdldscao7h5mqt9n51l06hj827en0t8im"
-
-    _rand.BaseGen(200, 10)
-    "30097034452802550871486525680991130549975686260731585" \
-    "03673310825717932257445225686163918381176296379272401" \
-    "10854695166069800229856722064738545820166775777106077" \
-    "16866697694687595079101472107079087607466"
-
-## UUID
-
-UUID is an application of BaseGen that generates a UUID-formatted string (of course, we don't have UUID style entropy ... that's not the point here).
-
-    _rand.UUID()
-    "c87e6bbf-4e06-64e3-64be-cda99977a5e7"
-
-# Algorithm
-MT and PRNG are offered.  The MT algorithm is MT19937 over a 32 bit space while the PRNG is
-explained below:
-
-The current "PRNG" algorithm is the common iterative of the form (variables explained below)
-
-    new iteration = ( (constant 1) * old iteration + (constant 2) ) modulus (constant 3)
-
-The mathematicians like to display this as
-
-    X[n + 1] = (a * X[n] + b) mod m
-
-This performs best under the following conditions:
-
-  * both a and m are mutually prime
-  * a and m are sufficiently large
-
-When the values used are small then you will get cycles. If the numbers change significantly
-to avoid cycles, then that leads to a pattern to.  To avoid these pitfalls, the following is done:
-
-  * a and m consist of a sets of 16 primes that are fairly close to each other
-  * b is a constantly iterating number
-  * after b hits a fallover point, currently 2^16, m gets shifted to the next prime in its set of 16
-  * when m exhausts its set, then a is shifted to it's next prime in the set of 16 and m returns.
-
-The last two, if that confuse you, are relatively easy to explain: Counting from 1 to 256 in 
-hexidecimal requires 2 digits, expressed like so:  0xf3.  This number is 15 * 16 + 3 = 243.
-
-For our purposes, if our fallover had happened 243 times then, we would be computing numbers based on
-the 15th prime in a's list and the 3rd prime in m's list.  This means that this cycle would repeat in
-2^16 * 2^8 = 2^24 times; however, it will still initialize with different X[n] and b values.
-
-## New Seeds
-When you set a new seed, this entire proces is reset.  That means that setting a seed of say 24, and
-asking for the first prime will always yield the same result regardless of the number of previous
-generations.
-
-## If you are a mathematician who specializes in this
-And you have a better method, please drop me a line; this is the best I could think of while keeping
-things relatively fast and easy to read.
-
-# Tests
-The file test.html tests two things:
-
-### Running out a number of seeds a few hundred thousand times
-The purpose of this test is to verify that the nth random number at seed x is identical on all
-platforms.  Currently this is verified by visual inspection.  Each seed 0 through (currently) 28
-is run out 300,000 times and then printed to the screen.  If there is floating point arithematic 
-differences between platforms or browsers that would lead to eventually different generation, this
-would be viewable here.
-
-### Tile generation of random distributions
-The purpose of this test is to verify by visual inspection the rough general quality of the output.
-Each tile is 
-
- * Generated with a different starting seed. 
- * Represents a distribution of 250,000 generations from 0 to 6400
- * Has a grey value 
-   * Corresponding to a normalized frequency of how often that number was generated 
-   * Is light when the number was generated with a high frequency
- * Is drawn as an 800x800 square and represents the frequency distribution over all 6400 values
-
-Currently 100 tiles are generated. Since the color is normalized, a darker square represents a poorer
-distribution and more bias towards certain numbers then a lighter square.  It's important to realize
-that these effects are intentionally exaggerated.  
-
-This is because the normalization happens as a result of the highest value so a single value of 6400 having
-a slightly biased frequency will make the entire tile go visibly darker.  This is why the test was constructed
-in this exact way.
-
-Given that, even in an ideal distribution, there should still slight noticable brightness difference between tiles.
-That's the sweet spot between very deterministic (eg, 1, 2, 3, 4 etc), psuedo-random and evenly distributed.
+The MT and the PRNG generators are written this way. You can look at the end of the source file to see how it was done.
 
