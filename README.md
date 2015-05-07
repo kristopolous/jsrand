@@ -27,6 +27,17 @@ This library is modularized. It has a set a generic functions and two different 
  * base (len, radix) : generates `len` characters in base `radix`.
  * UUID () : generates a UUID formatted string.
 
+## Parameters
+
+In order to use a parameter, set it after instantiatio like so:
+
+    var r = new Random.PRNG();
+    
+    r.inclusive = false;
+
+
+ * inclusive (*default: true*) - specifies whether integer randomization is inclusive or exclusive.
+
 ## Usage
 
 To use, create a new object of the type of generator you want to use.  currently supported generators are:
