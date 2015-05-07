@@ -51,8 +51,14 @@ var Random = (function(){
     ].join('-');
   }
 
-  Base.prototype.integer = function(){
-    return Math.round(this.generate.apply(this, arguments));
+  Base.prototype.inclusive = true;
+
+  Base.prototype.integer = function(min, max){
+    return Math.round(
+      arguments.length ? 
+        this.generate(min + this.inclusive, max - this.inclusive) :
+        this.generate() 
+    );
   }
 
   Base.prototype.generate = function(min, max) {
