@@ -29,7 +29,7 @@ This library is modularized. It has a set a generic functions and two different 
 
 ## Parameters
 
-In order to use a parameter, set it after instantiatio like so:
+In order to use a parameter, set it after instantiation like so:
 
     var r = new Random.PRNG();
     
