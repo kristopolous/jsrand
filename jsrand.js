@@ -56,7 +56,7 @@ var Random = (function(){
   Base.prototype.integer = function(min, max){
     return Math.round(
       arguments.length ? 
-        this.generate(min + this.inclusive, max - this.inclusive) :
+        this.generate(min + this.inclusive - 0.5, max - this.inclusive + 0.5) :
         this.generate() 
     );
   }
