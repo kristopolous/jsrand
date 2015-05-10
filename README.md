@@ -1,4 +1,4 @@
-**Demo and test [Right Over Here](http://qaa.ath.cx/jsrand/test.html)**
+**Demo and test [Right Over Here](http://9ol.es/jsrand/test.html)**
 
 # Overview
 Oftentimes while doing performance tests in javascript, I need to create test data with the following properties:
