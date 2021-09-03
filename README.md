@@ -5,7 +5,7 @@ Oftentimes while doing performance tests in javascript, I need to create test da
 
  * extremely large
  * sufficiently random
- * reproducable
+ * reproducible
 
 Javascript's `Math.random` can do the first 2 constraints, but the third one is left in the open and that's the problem; if you can't reliably reproduce the same set of psuedo random numbers every time, then that is yet another factor that may lead to a higher variance during test runs than necessary.
 
